@@ -1,0 +1,17 @@
+{
+  "name": "AI Powered Electronic Public Procurement and Oversight Intelligence System",
+  "short_name": "AEPPOIS",
+  "description": "AI Powered Electronic Public Procurement and Oversight Intelligence System — Integrity. Public Trust. Transparency. Good Governance. Clean Procurement. Government of Zimbabwe · PRAZ.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,635 @@
+/* ── All @imports must come first ─────────────────────────────────────── */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── TT Norms Pro (falls back to Inter if font files absent) ─────────── */
+@font-face {
+  font-family: 'TT Norms Pro';
+  src: url('/fonts/tt-norms-pro-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Norms Pro';
+  src: url('/fonts/tt-norms-pro-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Marquee animations ───────────────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes backers-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+.backers-track {
+  display: flex;
+  width: max-content;
+  animation: backers-marquee 30s linear infinite;
+}
+
+/* ── Design tokens ────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 215 60% 18%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 213 100% 95%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 20%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 196 80% 88%;
+    --accent-foreground: 215 60% 18%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 69% 31%;
+    --warning: 38 92% 50%;
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
+    --ring: 215 60% 18%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 0 0% 100%;
+    --card: 222 47% 11%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 222 47% 11%;
+    --primary-soft: 222 47% 20%;
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 222 47% 15%;
+    --muted-foreground: 220 14% 70%;
+    --accent: 222 47% 20%;
+    --accent-foreground: 0 0% 100%;
+    --border: 222 30% 25%;
+    --input: 222 30% 25%;
+    --ring: 0 0% 100%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+    font-family: inherit;
+  }
+
+  html, body {
+    font-family: 'TT Norms Pro', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    /* Lock body scroll — all scrolling happens inside designated containers */
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  #root {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ── Standalone pages (no AppShell) need body scroll ─────────────────── */
+/* Applied via class on the root div of pages like VendorSelfRegistration */
+.page-standalone {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Sidebar independent scrollbar ───────────────────────────────────── */
+/* Always show a thin scrollbar on the sidebar so users know it scrolls  */
+.sidebar-scroll {
+  scrollbar-width: thin;                    /* Firefox */
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+/* ── Main content scrollbar ───────────────────────────────────────────── */
+.main-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.12) transparent;
+}
+.main-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.main-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.main-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 4px;
+}
+.main-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
+}
+
+/* ── Hide scrollbar utility (use sparingly) ───────────────────────────── */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Tab strips that scroll horizontally ─────────────────────────────── */
+.tab-strip {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-strip::-webkit-scrollbar { display: none; }
+
+/* ── Workbench content area ───────────────────────────────────────────── */
+.workbench-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.10) transparent;
+}
+.workbench-scroll::-webkit-scrollbar { width: 5px; }
+.workbench-scroll::-webkit-scrollbar-track { background: transparent; }
+.workbench-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.10);
+  border-radius: 4px;
+}
+
+/* ── Fix: prevent content from jumping when dropdown opens ───────────── */
+.dropdown-open-fix { overflow-anchor: none; }
+
+/* ── Prevent invisible text on white backgrounds ─────────────────────── */
+.text-visible { color: #111827 !important; }
+
+/* ── Smooth animated transitions for workbench tabs ─────────────────── */
+.tab-panel-enter {
+  opacity: 0;
+  transform: translateY(4px);
+}
+.tab-panel-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* ── Email window overlay ────────────────────────────────────────────── */
+.email-window {
+  position: fixed;
+  bottom: 0;
+  right: 1.5rem;
+  width: 480px;
+  max-width: calc(100vw - 2rem);
+  z-index: 100;
+  box-shadow: 0 -4px 40px rgba(0,0,0,0.18);
+  border-radius: 12px 12px 0 0;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+.email-window-minimized {
+  max-height: 48px;
+  overflow: hidden;
+}
+
+/* ── Procurement stage connector lines ───────────────────────────────── */
+.stage-connector {
+  position: relative;
+}
+.stage-connector::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2px;
+  height: 16px;
+  background: rgba(0,0,0,0.10);
+  transform: translateX(-50%);
+}
+
+/* ── Form field focus ring fix ───────────────────────────────────────── */
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid rgba(0,0,0,0.15);
+  outline-offset: 1px;
+}
+
+/* ── Ensure dropdown menus are always visible ─────────────────────────── */
+[data-dropdown] {
+  isolation: isolate;
+}
+
+/* ── Table horizontal scroll fix ─────────────────────────────────────── */
+.table-container {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+.table-container::-webkit-scrollbar { height: 5px; }
+.table-container::-webkit-scrollbar-track { background: #f1f5f9; }
+.table-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+
+/* ── Fix for modals going behind header ──────────────────────────────── */
+.modal-overlay { z-index: 9999; }
+
+/* ── Animated loading spinner ────────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 2s linear infinite; }
+
+/* ── Badge visibility fixes ──────────────────────────────────────────── */
+.badge-visible {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 2px 8px;
+}
+
+/* ── Prevent content overlap with fixed header ───────────────────────── */
+.content-below-header {
+  padding-top: 56px;
+}
+
+/* ── GovTender Design System — Sharp Edges + Glow Buttons ──────────────── */
+
+/* Sharp-edged buttons with glow on hover */
+.btn-appois {
+  border-radius: 0 !important;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.btn-appois:hover {
+  box-shadow: 0 0 14px 3px rgba(30, 64, 175, 0.45), 0 0 4px 1px rgba(30, 64, 175, 0.3);
+}
+.btn-appois-dark:hover {
+  box-shadow: 0 0 14px 3px rgba(255,255,255,0.18), 0 0 4px 1px rgba(255,255,255,0.12);
+}
+
+/* Sidebar nav link glow */
+.nav-glow:hover {
+  box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Glow effect on all interactive elements system-wide */
+.appois-glow-on-hover {
+  transition: box-shadow 0.18s ease;
+}
+.appois-glow-on-hover:hover {
+  box-shadow: 0 0 12px 3px rgba(37, 99, 235, 0.35), 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Dark glow (for dark background buttons) */
+.appois-glow-white:hover {
+  box-shadow: 0 0 16px 4px rgba(255, 255, 255, 0.2), 0 0 6px 2px rgba(96, 165, 250, 0.25);
+}
+
+/* ── Auto-scrolling ticker for tenders — SLOW SEAMLESS SCROLL ────────── */
+@keyframes tender-scroll-up {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.tender-scroll-track {
+  animation: tender-scroll-up 40s linear infinite;   /* slow scroll */
+  will-change: transform;
+}
+.tender-scroll-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Moving news ticker (right to left) — slow ────────────────────────── */
+@keyframes ticker-rtl {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.news-ticker-track {
+  animation: ticker-rtl 60s linear infinite;   /* slow scroll */
+  white-space: nowrap;
+}
+.news-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── AI Assistant glowing logo (Gemini-style) ────────────────────────── */
+@keyframes ai-glow-pulse {
+  0%   { box-shadow: 0 0 8px 2px rgba(99, 102, 241, 0.5), 0 0 20px 4px rgba(139, 92, 246, 0.3); }
+  50%  { box-shadow: 0 0 16px 6px rgba(99, 102, 241, 0.7), 0 0 32px 10px rgba(59, 130, 246, 0.4); }
+  100% { box-shadow: 0 0 8px 2px rgba(99, 102, 241, 0.5), 0 0 20px 4px rgba(139, 92, 246, 0.3); }
+}
+@keyframes ai-logo-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+/* ── System Logo — solid PRIMARY only, no gradients ───────────────────── */
+.ai-logo-glow {
+  border-radius: 50%;
+}
+.ai-logo-gradient {
+  background: #0F172A;
+}
+
+/* ── Briefing module + BI Dashboard scrolling KPI indicators ─────────── */
+@keyframes kpi-scroll-up {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+/* Wrapper must have overflow:hidden; inner track has 2× content for seamless loop */
+.kpi-ticker-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.kpi-ticker-wrap::before,
+.kpi-ticker-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 40px;
+  pointer-events: none;
+  z-index: 2;
+}
+.kpi-ticker-wrap::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(10,22,40,1) 0%, transparent 100%);
+}
+.kpi-ticker-wrap::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(10,22,40,1) 0%, transparent 100%);
+}
+
+.kpi-ticker-track {
+  animation: kpi-scroll-up 28s linear infinite;
+  will-change: transform;
+}
+.kpi-ticker-wrap:hover .kpi-ticker-track,
+.kpi-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Light theme variant (for Analytics / BI pages) */
+.kpi-ticker-wrap.light::before {
+  background: linear-gradient(to bottom, rgba(248,249,250,1) 0%, transparent 100%);
+}
+.kpi-ticker-wrap.light::after {
+  background: linear-gradient(to top, rgba(248,249,250,1) 0%, transparent 100%);
+}
+
+/* Briefing legacy */
+.briefing-indicator-track {
+  animation: kpi-scroll-up 24s linear infinite;
+  will-change: transform;
+}
+.briefing-indicator-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Sharp corners override — apply system-wide ──────────────────────── */
+.sharp {
+  border-radius: 0 !important;
+}
+.sharp-sm {
+  border-radius: 2px !important;
+}
+
+/* ── Dashboard tile glow ─────────────────────────────────────────────── */
+.dashboard-tile {
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  border-radius: 0 !important;
+}
+.dashboard-tile:hover {
+  box-shadow: 0 0 18px 4px rgba(37, 99, 235, 0.2), 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* ── Platform Dark Header ───────────────────────────────────────────────── */
+.appois-header {
+  background: #0f172a;
+  color: white;
+}
+.appois-nav-link {
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.appois-nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  box-shadow: inset 0 -2px 0 rgba(96, 165, 250, 0.8);
+}
+
+/* ── Workbench government header ─────────────────────────────────────── */
+.gov-header-line {
+  border-bottom: 2px solid #1e3a5f;
+  background: #0f172a;
+  color: white;
+}
+
+/* ── Email client styles ─────────────────────────────────────────────── */
+.email-toolbar-btn {
+  transition: box-shadow 0.15s ease;
+  border-radius: 0;
+}
+.email-toolbar-btn:hover {
+  box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.35);
+
+/* ── Document preview panel ──────────────────────────────────────────── */
+.doc-preview-panel {
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  border-left: 1px solid rgba(0,0,0,0.08);
+  height: 100%;
+  overflow: hidden;
+}
+.doc-preview-toolbar {
+  background: #0f172a;
+  color: white;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.doc-preview-embed {
+  flex: 1;
+  overflow: auto;
+  background: white;
+}
+.doc-preview-embed iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ── Smooth scroll behaviour for all scrollable areas ───────────────── */
+html {
+  scroll-behavior: smooth;
+}
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Board pack document viewer ──────────────────────────────────────── */
+.board-pack-viewer {
+  display: flex;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+.board-pack-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid rgba(0,0,0,0.08);
+  background: #f1f5f9;
+}
+.board-pack-content {
+  flex: 1;
+  overflow: auto;
+  background: white;
+  padding: 24px;
+}
+
+/* ── Colour theme tokens ─────────────────────────────────────────────── */
+:root {
+  --gov-navy:     #0d1b2e;
+  --gov-blue:     #1a56db;
+  --gov-teal:     #0891b2;
+  --gov-emerald:  #059669;
+  --gov-amber:    #d97706;
+  --gov-red:      #dc2626;
+  --gov-bg:       #deeaf5;
+  --gov-surface:  #ffffff;
+  --gov-border:   rgba(0,0,0,0.08);
+  --gov-header:   #0d1b2e;
+  --gov-sidebar:  #111827;
+  --gov-accent1:  #1a56db;
+  --gov-accent2:  #0891b2;
+}
+}
+
+/* ── Folder tab styles ───────────────────────────────────────────────── */
+.folder-tab {
+  position: relative;
+  border-radius: 0;
+  transition: box-shadow 0.15s;
+}
+.folder-tab::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 8px;
+  width: 30%;
+  height: 6px;
+  background: inherit;
+  border-radius: 4px 4px 0 0;
+}
+.folder-tab:hover {
+  box-shadow: 0 0 12px 2px rgba(30, 64, 175, 0.3);
+}
+
+/* ── Process tower tabs ──────────────────────────────────────────────── */
+.process-tower-tab {
+  border-radius: 0;
+  transition: all 0.15s ease;
+}
+.process-tower-tab:hover,
+.process-tower-tab.active {
+  box-shadow: 0 0 10px 2px rgba(30, 64, 175, 0.3);
+}
+
+/* ── Tender card hover glow ──────────────────────────────────────────── */
+.tender-card-hover {
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.tender-card-hover:hover {
+  box-shadow: 0 0 16px 4px rgba(30, 64, 175, 0.15);
+  border-color: rgba(30, 64, 175, 0.3) !important;
+}
+
+/* ── Vendor portal row hover ─────────────────────────────────────────── */
+.vendor-row:hover {
+  box-shadow: inset 3px 0 0 #3b82f6, 0 0 8px rgba(59, 130, 246, 0.1);
+}
+
+/* ── Critical hazard glow (red flashy pulse) ─────────────────────────── */
+@keyframes hazard-critical-pulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px rgba(220, 38, 38, 0.4), 0 0 12px 2px rgba(220, 38, 38, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(220, 38, 38, 0.85), 0 0 24px 6px rgba(220, 38, 38, 0.45);
+  }
+}
+.hazard-critical-glow {
+  animation: hazard-critical-pulse 1.4s ease-in-out infinite;
+}
+@keyframes hazard-critical-text-glow {
+  0%, 100% { text-shadow: 0 0 4px rgba(220, 38, 38, 0.5); }
+  50%      { text-shadow: 0 0 10px rgba(220, 38, 38, 0.95), 0 0 20px rgba(220, 38, 38, 0.55); }
+}
+.hazard-critical-text {
+  animation: hazard-critical-text-glow 1.4s ease-in-out infinite;
+  font-weight: 800;
+}
+
+/* ── Visible bold scrollbar for hierarchy tree ────────────────────────── */
+.hierarchy-scroll::-webkit-scrollbar { width: 10px; }
+.hierarchy-scroll::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 0;
+}
+.hierarchy-scroll::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 0;
+  border: 2px solid #0f172a;
+}
+.hierarchy-scroll::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+
+
+
